@@ -8,7 +8,9 @@
     "lib",
     "es"
   ],
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vant-cli dev",
     "test": "vant-cli test",
@@ -30,6 +32,9 @@
   "peerDependencies": {
     "@ignorance/validator": "1.0.14",
     "vue": "^3.0.0"
+  },
+  "dependencies": {
+    "@ignorance/validator": "1.0.14"
   },
   "devDependencies": {
     "@ignorance/validator": "1.0.14",

@@ -7,23 +7,13 @@
       { type: 'submit', prop: '', label: '提交' },
     ]"
     :form-data="formData"
-    :rule-config="{
-      name: [
-        {validator: /^345$/, msg: '错误提示： 345'},
-      ],
-      pwd: [
-        {validator: /^111$/, msg: '错误提示： 111'},
-      ],
-      custom: [
-        {validator: /^custom$/, msg: '错误提示： custom'},
-      ]
-    }"
+    :rule-config="ruleConfig"
     :components="components"
     :get-validator="(validator) => {}"
   >
     <template #custom="{ formData, formItem: {prop, label}, validator, result }">
       <input type="text" v-model="formData[prop]" @input="validator" :placeholder="label">
-      <h1 v-if="!result.valid">{{ result.msg }}</h1>
+      <h1 v-if="!(result || {}).valid">{{ (result || {}).msg }}</h1>
     </template>
   </ViForm>
   <!-- {{ formData }} -->
@@ -45,9 +35,33 @@ export default {
       },
       components: {
         viInput, submit
+      },
+      ruleConfig: {
+        name: [
+          {validator: /^345$/, msg: '错误提示： 345'},
+        ],
+        pwd: [
+          {validator: /^111$/, msg: '错误提示： 111'},
+        ],
+        custom: [
+          {validator: /^custom$/, msg: '错误提示： custom'},
+        ]
       }
     }
   },
+  mounted() {
+    setTimeout(() => {
+      this.ruleConfig = {
+        name: [
+          {validator: /^345$/, msg: '错误提示： 345'},
+        ],
+        pwd: [
+          {validator: /^111$/, msg: '错误提示： 111'},
+        ],
+      }
+      // Reflect.deleteProperty(this.ruleConfig, custom)
+    }, 3000)
+  }
 }
 </script>
 

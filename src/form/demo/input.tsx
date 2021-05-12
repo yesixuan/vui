@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, onUpdated, watch } from 'vue'
 import './index.scss'
 
 const ViInput = defineComponent({
@@ -10,7 +10,17 @@ const ViInput = defineComponent({
     validator: Function,
     result: Object,
   },
-  setup() {
+  setup(prop) {
+    // watch(
+    //   () => prop.validator,
+    //   () => {
+    //     console.log('validator 改变')
+    //   }
+    // )
+    onUpdated(() => {
+      // prop.validator()
+      // console.log('validator 改变')
+    })
     return (prop) => {
       return <div>
         <input

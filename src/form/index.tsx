@@ -1,4 +1,4 @@
-import { defineComponent, PropType, Ref, ref } from 'vue'
+import { defineComponent, PropType, Ref, ref, watch } from 'vue'
 import { AllRes, createValidator, Validator, RuleConfig } from '@ignorance/validator'
 
 
@@ -27,10 +27,22 @@ export default defineComponent({
     }
   },
   setup(prop, { slots }) {
-    const validator = createValidator(prop.ruleConfig)
-    const { verifySingle, getResult, verifyAll } = validator
+    let validator = createValidator(prop.ruleConfig)
+    let { verifySingle, getResult, verifyAll } = validator
+    // console.log('重新初始化')
     const validateMsg = ref(getResult())
     prop.getValidator(validator, validateMsg)
+    watch(
+      () => [prop.ruleConfig, prop.schema],
+      () => {
+        validator = createValidator(prop.ruleConfig)
+        verifySingle = validator.verifySingle
+        getResult = validator.getResult
+        verifyAll = validator.verifyAll
+        validateMsg.value = { ...getResult(), ...validateMsg.value }
+        prop.getValidator(validator, validateMsg)
+      }
+    )
 
     const components = { ...prop.components }
 
@@ -42,7 +54,8 @@ export default defineComponent({
           validateMsg.value[key] = verifySingle(key, prop.formData[key], prop.formData)
         }
         const handleSubmit = () => {
-          Object.assign(validateMsg.value, verifyAll(prop.formData))
+          validateMsg.value = verifyAll(prop.formData)
+          // Object.assign(validateMsg.value, verifyAll(prop.formData))
         }
         return (slots[type] ?? components[type])({
           formData: prop.formData,

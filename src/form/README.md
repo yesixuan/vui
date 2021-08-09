@@ -7,8 +7,8 @@ ViForm 提供灵活而强大的表单校验能力
 ### 引入
 
 ```js
-import Vue from 'vue';
-import { Form } from 'render-form';
+import Vue from 'vue'
+import ViForm from '@ignorance/vui/es/form'
 
 Vue.use(Form);
 ```

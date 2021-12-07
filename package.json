@@ -1,6 +1,6 @@
 {
   "name": "@ignorance/vui",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "lib/vui.js",
   "style": "lib/index.css",

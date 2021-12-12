@@ -1,5 +1,6 @@
 <template>
   <ViForm
+    tag="div"
     :schema="[
       { type: 'viInput', prop: 'name', label: '名字', trigger: 'blur' },
       { type: 'viInput', prop: 'pwd', label: '密码', trigger: 'input' },
@@ -36,7 +37,8 @@
 </template>
 
 <script>
-import ViForm from '../form/index.jsx'
+import ViForm from '../form/index.js'
+// import ViForm from '../form/index.js'
 import { viInput, submit } from './input.jsx'
 
 export default {

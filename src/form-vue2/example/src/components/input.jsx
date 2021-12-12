@@ -8,7 +8,7 @@ export const viInput = ({
         fromData={formData}
         prop={prop}
         label={label}
-        validator={validator}
+        validator={() => validator(prop)}
         result={result}
       />
     }

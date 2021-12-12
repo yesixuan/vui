@@ -4,7 +4,7 @@
       type="text"
       v-model="fromData[prop]"
       :placeholder="label"
-      @Input="validator"
+      @input="validator"
     />
     <p>{{result.valid || result.msg}}</p >
   </div>

@@ -8,9 +8,9 @@ ViForm 提供灵活而强大的表单校验能力
 
 ```js
 import Vue from 'vue'
-import ViForm from '@ignorance/vui/es/form-vue2/index.jsx'
+import ViForm from '@ignorance/vui/es/form-vue2'
 
-Vue.use(Form);
+Vue.component('ViForm', ViForm);
 ```
 
 ## 代码演示
@@ -41,10 +41,6 @@ Vue.use(Form);
     :components="components"
     :getValidator="(validator) => {}"
   >
-    <template #custom="{ formData, formItem: {prop, label}, validator, result }">
-      <input type="text" v-model="formData[prop]" @input="validator" :placeholder="label">
-      <h1 v-if="!result.valid">{{ result.msg }}</h1>
-    </template>
   </ViForm>
   <!-- {{ formData }} -->
 </template>

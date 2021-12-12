@@ -4,6 +4,10 @@ import { createValidator } from '@ignorance/validator'
 export default {
   name: 'ViForm',
   props: {
+    tag: {
+      type: String,
+      default: 'form'
+    },
     schema: {
       type: Array,
       required: true,
@@ -34,35 +38,29 @@ export default {
     this.validator = createValidator(this.ruleConfig)
     const { getResult } = this.validator
     this.validateMsg = getResult()
-  },
-  render() {
-    const { verifySingle, verifyAll } = this.validator
     this.getValidator(this.validator, this.validateMsg)
-
+  },
+  render(h) {
     const renderItems = () => {
       return this.schema.map((formItem) => {
         const { type, prop: key } = formItem
         // 构造校验函数
         const validator = () => {
-          this.validateMsg[key] = verifySingle(key, this.formData[key], this.formData)
+          Object.assign(this.validateMsg[key], this.validator.verifySingle(key, this.formData[key], this.formData))
         }
         const handleSubmit = () => {
-          Object.assign(this.validateMsg, verifyAll(this.formData))
+          Object.assign(this.validateMsg, this.validator.verifyAll(this.formData))
         }
         const Cmp = (this.components[type])({
           formData: this.formData,
           formItem,
-          validator,
+          validator: validator,
           result: this.validateMsg[key],
           submit: handleSubmit,
         })
-        return <Cmp />
+        return h(Cmp, { key: key })
       })
     }
-    return <form>
-      {
-        renderItems()
-      }
-    </form>
+    return h(this.tag, renderItems())
   }
 }

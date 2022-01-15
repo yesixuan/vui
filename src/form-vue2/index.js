@@ -35,10 +35,47 @@ export default {
     }
   },
   created() {
-    this.validator = createValidator(this.ruleConfig)
-    const { getResult } = this.validator
-    this.validateMsg = getResult()
-    this.getValidator(this.validator, this.validateMsg)
+    // 存储副本
+    this._formData = Object.freeze(JSON.parse(JSON.stringify(this.formData)))
+    this.init()
+    this._validateMsg = Object.freeze(JSON.parse(JSON.stringify(this.validateMsg)))
+  },
+  watch: {
+    ruleConfig: {
+      handler(val) {
+        this.init()
+      },
+      deep: true,
+    },
+  },
+  methods: {
+    init() {
+      this.validator = createValidator(this.ruleConfig)
+      const { getResult } = this.validator
+      this.validateMsg = getResult()
+      this.getValidator(this.validator, this.validateMsg, () => {
+        if (typeof this.validateMsg !== 'object') {
+          return console.warn(`this.validateMsg: ${this.validateMsg} 不是对象`)
+        }
+        Object.assign(this.validateMsg, this.validator.verifyAll(this.formData) || {})
+      })
+    },
+    resetFields() {
+      if (typeof this.formData !== 'object') {
+        return console.warn(`this.formData: ${this.formData} 不是对象`)
+      }
+      Object.assign(this.formData, this._formData || {})
+    },
+    clearValidate() {
+      if (typeof this.validateMsg !== 'object') {
+        return console.warn(`this.validateMsg: ${this.validateMsg} 不是对象`)
+      }
+      Object.assign(this.validateMsg, this._validateMsg || {})
+    },
+    reset() {
+      this.resetFields()
+      this.clearValidate()
+    },
   },
   render(h) {
     const renderItems = () => {
@@ -46,10 +83,16 @@ export default {
         const { type, prop: key } = formItem
         // 构造校验函数
         const validator = () => {
-          Object.assign(this.validateMsg[key], this.validator.verifySingle(key, this.formData[key], this.formData))
+          if (typeof this.validateMsg[key] !== 'object') {
+            return console.warn(`this.validateMsg[key]: ${this.validateMsg[key]} 不是对象`)
+          }
+          Object.assign(this.validateMsg[key], this.validator.verifySingle(key, this.formData[key], this.formData) || {})
         }
         const handleSubmit = () => {
-          Object.assign(this.validateMsg, this.validator.verifyAll(this.formData))
+          if (typeof this.validateMsg !== 'object') {
+            return console.warn(`this.validateMsg: ${this.validateMsg} 不是对象`)
+          }
+          Object.assign(this.validateMsg, this.validator.verifyAll(this.formData) || {})
         }
         const Cmp = (this.components[type])({
           formData: this.formData,

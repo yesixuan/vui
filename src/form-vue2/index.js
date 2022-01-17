@@ -47,6 +47,12 @@ export default {
       },
       deep: true,
     },
+    schema: {
+      handler(val) {
+        this.init()
+      },
+      deep: true,
+    },
   },
   methods: {
     init() {
@@ -60,8 +66,18 @@ export default {
         Object.assign(this.validateMsg, this.validator.verifyAll(this.formData) || {})
       })
     },
-    resetFields() {
-      if (typeof this.formData !== 'object') {
+    verifyAll() {
+      if (typeof this.validateMsg !== 'object') {
+        return console.warn(`this.validateMsg: ${this.validateMsg} 不是对象`)
+      }
+      return Object.assign(this.validateMsg, this.validator.verifyAll(this.formData) || {})
+    },
+    verify() {
+      return this.validator.verify(this.formData)
+    },
+    resetFields(formData) {
+      const target = formData || this.formData
+      if (typeof target !== 'object') {
         return console.warn(`this.formData: ${this.formData} 不是对象`)
       }
       Object.assign(this.formData, this._formData || {})
@@ -72,8 +88,8 @@ export default {
       }
       Object.assign(this.validateMsg, this._validateMsg || {})
     },
-    reset() {
-      this.resetFields()
+    reset(formData) {
+      this.resetFields(formData)
       this.clearValidate()
     },
   },
